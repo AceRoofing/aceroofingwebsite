@@ -2,11 +2,14 @@
 
 /* --------------------------------------------------------------------------
    FORM SETUP
-   Both forms (free inspection + contact page) are emailed through
-   FormSubmit (https://formsubmit.co) to the address below. To change where
-   requests go, change the email address at the end of this URL.
+   Both forms (free inspection + contact page) are sent through Web3Forms
+   (https://web3forms.com), which emails each request to the address the
+   Web3Forms account that owns the access key below (aceco@aceroofingtx.com). The access key
+   is not a secret; it only lets this site send to that inbox. Submissions
+   are logged in the Web3Forms dashboard.
    -------------------------------------------------------------------------- */
-const FORM_ENDPOINT = "https://formsubmit.co/ajax/nperez@aceroofingtx.com";
+const FORM_ENDPOINT = "https://api.web3forms.com/submit";
+const FORM_ACCESS_KEY = "42dbcec6-908f-4823-b6cf-9a6bb407781d";
 
 const PHONE_DISPLAY = "(956) 534-2911";
 
@@ -140,9 +143,11 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         if (data._honey) return; // spam bot filled the hidden field
         delete data._honey;
-        if (data.email) data._replyto = data.email;
-        data._template = "table";
-        data._captcha = "false";
+        data.access_key = FORM_ACCESS_KEY;
+        data.subject = data._subject || "New website request — aceroofingtx.com";
+        delete data._subject;
+        data.from_name = "ACE Roofing website";
+        if (data.email) data.replyto = data.email;
         data["Page"] = window.location.href;
 
         const res = await fetch(FORM_ENDPOINT, {
@@ -151,7 +156,7 @@ document.addEventListener("DOMContentLoaded", () => {
           body: JSON.stringify(data),
         });
         const json = await res.json().catch(() => ({}));
-        if (!res.ok || String(json.success) !== "true") throw new Error(json.message || String(res.status));
+        if (!res.ok || json.success !== true) throw new Error(json.message || String(res.status));
         form.reset();
         say("Thank you for contacting us. We will get back to you as soon as possible.", true);
         if (typeof window.gtag === "function") {

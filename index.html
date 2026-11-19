@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="script-src 'sha256-JRlA8QIOKaUeQlPfv9LjfG+U8xRcFc8UJsRe6G4h+ws=' 'sha256-Fe7Z69FNV3E8QmyrIbN3ebQky2jh+Y5yMNUqAiRGYrg=' 'sha256-7p+mO3zNl3+RQ5t/9mR8GIK740Zq7/UbTsnHErrxaC0=' 'strict-dynamic' 'unsafe-inline' https:; object-src 'none'; base-uri 'none'; form-action 'self'; require-trusted-types-for 'script'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="script-src 'sha256-JRlA8QIOKaUeQlPfv9LjfG+U8xRcFc8UJsRe6G4h+ws=' 'sha256-Fe7Z69FNV3E8QmyrIbN3ebQky2jh+Y5yMNUqAiRGYrg=' 'sha256-INvduCmw92bfqw20inHxwRUB5/DXw4goTb00V4Q8+m4=' 'strict-dynamic' 'unsafe-inline' https:; object-src 'none'; base-uri 'none'; form-action 'self'; require-trusted-types-for 'script'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <link rel="preconnect" href="https://www.googletagmanager.com">
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-7Q5J23P749');(function(){var u='https://www.googletagmanager.com/gtag/js?id=G-7Q5J23P749',s=document.createElement('script');s.async=true;var p=window.trustedTypes&&trustedTypes.createPolicy?trustedTypes.createPolicy('gtag-loader',{createScriptURL:function(x){if(x===u)return x;throw new Error('Blocked script URL');}}):null;s.src=p?p.createScriptURL(u):u;document.head.appendChild(s);})();</script>
@@ -227,7 +227,8 @@
   </div>
 </footer>
 <a class="mobile-call" href="tel:956-534-2911">Call Now &mdash; Free Inspection</a>
-<script>const FORM_ENDPOINT = "https://formsubmit.co/ajax/nperez@aceroofingtx.com";
+<script>const FORM_ENDPOINT = "https://api.web3forms.com/submit";
+const FORM_ACCESS_KEY = "42dbcec6-908f-4823-b6cf-9a6bb407781d";
 const PHONE_DISPLAY = "(956) 534-2911";
 document.addEventListener("DOMContentLoaded", () => {
 const toggle = document.querySelector(".nav-toggle");
@@ -338,9 +339,11 @@ data[key] = data[key] ? `${data[key]}, ${value}` : value;
 });
 if (data._honey) return; // spam bot filled the hidden field
 delete data._honey;
-if (data.email) data._replyto = data.email;
-data._template = "table";
-data._captcha = "false";
+data.access_key = FORM_ACCESS_KEY;
+data.subject = data._subject || "New website request — aceroofingtx.com";
+delete data._subject;
+data.from_name = "ACE Roofing website";
+if (data.email) data.replyto = data.email;
 data["Page"] = window.location.href;
 const res = await fetch(FORM_ENDPOINT, {
 method: "POST",
@@ -348,7 +351,7 @@ headers: { "Content-Type": "application/json", Accept: "application/json" },
 body: JSON.stringify(data),
 });
 const json = await res.json().catch(() => ({}));
-if (!res.ok || String(json.success) !== "true") throw new Error(json.message || String(res.status));
+if (!res.ok || json.success !== true) throw new Error(json.message || String(res.status));
 form.reset();
 say("Thank you for contacting us. We will get back to you as soon as possible.", true);
 if (typeof window.gtag === "function") {
