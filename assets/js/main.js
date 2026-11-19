@@ -52,13 +52,23 @@ document.addEventListener("DOMContentLoaded", () => {
     lb.setAttribute("role", "dialog");
     lb.setAttribute("aria-modal", "true");
     lb.setAttribute("aria-label", "Project photo");
-    lb.innerHTML =
-      '<button class="lb-close" aria-label="Close">&times;</button>' +
-      '<button class="lb-prev" aria-label="Previous photo">&#8249;</button>' +
-      '<img alt="">' +
-      '<button class="lb-next" aria-label="Next photo">&#8250;</button>';
+    // Built with DOM methods (no innerHTML) so it works under Trusted Types.
+    const button = (cls, label, text) => {
+      const b = document.createElement("button");
+      b.className = cls;
+      b.setAttribute("aria-label", label);
+      b.textContent = text;
+      return b;
+    };
+    const img = document.createElement("img");
+    img.alt = "";
+    lb.append(
+      button("lb-close", "Close", "×"),
+      button("lb-prev", "Previous photo", "‹"),
+      img,
+      button("lb-next", "Next photo", "›")
+    );
     document.body.appendChild(lb);
-    const img = lb.querySelector("img");
     let idx = 0;
 
     const show = (i) => {

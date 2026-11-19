@@ -283,6 +283,33 @@ with open(os.path.join(OUT, "assets", "css", "styles.css")) as _f:
 with open(os.path.join(OUT, "assets", "js", "main.js")) as _f:
     INLINE_JS = minify_js(_f.read())
 
+# Switches the Google Fonts stylesheet on once it has loaded (replaces an
+# inline onload="" handler, which a strict Content-Security-Policy blocks).
+FONT_JS = ("(function(l){if(!l)return;var f=function(){l.media='all'};"
+           "if(l.sheet)f();else l.addEventListener('load',f)})(document.getElementById('gfonts'));")
+
+
+def _sha256(code):
+    import base64
+    import hashlib
+    return "'sha256-" + base64.b64encode(hashlib.sha256(code.encode("utf-8")).digest()).decode() + "'"
+
+
+# Strict CSP (Lighthouse "Ensure CSP is effective against XSS attacks" and
+# "Mitigate DOM-based XSS with Trusted Types"). Only the two inline scripts
+# above, identified by their hashes, may run. 'unsafe-inline' and https: are
+# ignored by modern browsers when hashes + 'strict-dynamic' are present; they
+# only keep very old browsers working. GitHub Pages can't send headers, so it
+# goes in a <meta> tag.
+CSP = "; ".join([
+    f"script-src {_sha256(FONT_JS)} {_sha256(INLINE_JS)} 'strict-dynamic' 'unsafe-inline' https:",
+    "object-src 'none'",
+    "base-uri 'none'",
+    "form-action 'self'",
+    "require-trusted-types-for 'script'",
+    "upgrade-insecure-requests",
+])
+
 
 def canonical_for(path):
     return SITE + "/" + path
@@ -349,6 +376,8 @@ def page(path, title, description, body, crumbs=None, extra_schema=None, page_ty
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="{CSP}">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <title>{e(title)}</title>
 <meta name="description" content="{e(description)}">
 <meta name="robots" content="index, follow, max-image-preview:large">
@@ -374,7 +403,8 @@ def page(path, title, description, body, crumbs=None, extra_schema=None, page_ty
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 {preload}
 <style>{INLINE_CSS}</style>
-<link rel="stylesheet" href="{fonts}" media="print" onload="this.media='all'">
+<link id="gfonts" rel="stylesheet" href="{fonts}" media="print">
+<script>{FONT_JS}</script>
 <noscript><link rel="stylesheet" href="{fonts}"></noscript>
 <script type="application/ld+json">{schema}</script>
 </head>
