@@ -152,7 +152,7 @@ p { margin: 0 0 1.1em; }
 }
 .topbar a { text-decoration: none; }
 .topbar a:hover { color: var(--gold); }
-.topbar__msg { color: var(--gold); font-weight: 500; }
+.topbar__msg { color: var(--gold); font-weight: 600; }
 .topbar__social { display: flex; gap: 14px; align-items: center; }
 .topbar__social svg { width: 16px; height: 16px; fill: currentColor; }
 
@@ -721,7 +721,7 @@ fieldset.field legend {
   color: var(--black);
   text-align: center;
   padding: 14px;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   text-decoration: none;
@@ -820,7 +820,7 @@ fieldset.field legend {
 .breadcrumbs { background: var(--light); border-bottom: 1px solid var(--line); font-size: 0.85rem; }
 .breadcrumbs ol { list-style: none; margin: 0; padding: 12px 0; display: flex; flex-wrap: wrap; gap: 6px; }
 .breadcrumbs li + li::before { content: "/"; margin-right: 6px; color: #999; }
-.breadcrumbs a { color: var(--gold-text); text-decoration: none; font-weight: 500; }
+.breadcrumbs a { color: var(--gold-text); text-decoration: none; font-weight: 600; }
 .breadcrumbs a:hover { text-decoration: underline; }
 .breadcrumbs [aria-current] { color: #444; }
 
@@ -840,7 +840,7 @@ fieldset.field legend {
   border-left: 3px solid var(--gold);
   border-radius: var(--radius);
   padding: 8px 16px;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 /* Links inside text ------------------------------------------------------ */
