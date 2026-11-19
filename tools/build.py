@@ -27,6 +27,11 @@ INSTAGRAM = "https://www.instagram.com/aceroofing_tx/"
 TIKTOK = "https://www.tiktok.com/@aceroofing_tx"
 GOOGLE_REVIEW = "https://g.page/r/CesZdLbluRmFEBM/review"
 
+# Christmas theme: string lights, snow, holiday wording and colors across the
+# whole site. Set to False after the holidays and rebuild to switch it off.
+HOLIDAY = True
+LIGHTS = '<div class="xmas-lights" aria-hidden="true"></div>'
+
 
 def img(name):
     return CDN + name
@@ -159,7 +164,7 @@ def header(r, path):
     return f"""<a class="skip-link" href="#main">Skip to content</a>
 <div class="topbar">
   <div class="container">
-    <span class="topbar__msg">Free Inspection Within 24 Hours &bull; 24/7 Emergency Services</span>
+    <span class="topbar__msg">{"Merry Christmas from ACE Roofing &bull; " if HOLIDAY else ""}Free Inspection Within 24 Hours &bull; 24/7 Emergency Services</span>
     <a href="tel:{PHONE}">Call {PHONE_DISPLAY}</a>
     <div class="topbar__social">{social_links()}</div>
   </div>
@@ -177,6 +182,7 @@ def header(r, path):
     </nav>
     <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span></button>
   </div>
+  {LIGHTS if HOLIDAY else ""}
 </header>"""
 
 
@@ -194,6 +200,7 @@ def footer(r):
   <div class="footer-badges">
     <div class="container badges">{badges_html()}</div>
   </div>
+  {LIGHTS if HOLIDAY else ""}
   <div class="container footer-main">
     <div>
       <img class="footer-logo" src="{sized(LOGO_WHITE, 600)}" alt="ACE Roofing" loading="lazy" decoding="async" width="240" height="82">
@@ -218,6 +225,7 @@ def footer(r):
       <p style="margin-top:18px"><a class="btn" href="{r}contact/">Contact Us Today!</a></p>
     </div>
   </div>
+  {'<p class="holiday-greeting">Merry Christmas &amp; Happy New Year from all of us at ACE Roofing!</p>' if HOLIDAY else ""}
   <div class="footer-bottom">
     <div class="container">
       <span>&copy; <span data-year>2026</span> ACE Roofing. All Rights Reserved.</span>
@@ -402,7 +410,7 @@ def page(path, title, description, body, crumbs=None, extra_schema=None, page_ty
     if m:
         preload = f'<link rel="preload" as="image" href="{m.group(1)}" imagesrcset="{m.group(2)}" imagesizes="{m.group(3)}" fetchpriority="high">'
 
-    fonts = "https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Poppins:wght@400;600&display=swap"
+    fonts = "https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Poppins:wght@400;600" + ("&family=Great+Vibes" if HOLIDAY else "") + "&display=swap"
     doc = f"""<!DOCTYPE html>
 <html lang="en-US">
 <head>
@@ -442,7 +450,7 @@ def page(path, title, description, body, crumbs=None, extra_schema=None, page_ty
 <noscript><link rel="stylesheet" href="{fonts}"></noscript>
 <script type="application/ld+json">{schema}</script>
 </head>
-<body>
+<body{' class="holiday"' if HOLIDAY else ""}>
 {header(r, path)}
 <main id="main">
 {main}
@@ -486,9 +494,13 @@ def inspection_form(heading_tag="h2"):
 
 
 def cta_band(r, text="Schedule A Free Roof Inspection Today!"):
+    heading = f"<h2>{text}</h2>"
+    if HOLIDAY:
+        sub = "" if text == "Contact Us Today!" else f'<p class="cta-band__sub">{text}</p>'
+        heading = f'<div><h2>Give Your Home the Gift of a Safe, Dry Roof This Christmas</h2>{sub}</div>'
     return f"""<section class="cta-band">
   <div class="container">
-    <h2>{text}</h2>
+    {heading}
     <div class="actions">
       <a class="btn btn--dark" href="{r}contact/">Contact Us Today!</a>
       <a class="btn btn--dark" href="tel:{PHONE}">{PHONE_DISPLAY}</a>
@@ -640,6 +652,7 @@ def home_body(r):
   {rimg(img("Screenshot+2023-10-25+9.18.25+AM-1920w.png"), "Aerial view of a Dallas-Fort Worth home roof", cls="hero__bg", priority=True, sizes=HERO_SIZES, widths=HERO_WIDTHS)}
   <div class="container">
     <div>
+      {'<p class="holiday-pill">Merry Christmas, Dallas-Fort Worth!</p>' if HOLIDAY else ""}
       <p class="hero__tagline">Don&rsquo;t Gamble Your Roof, Bet on ACE Roofing</p>
       <h1><span class="gold">Dallas-Fort Worth Roofing Contractor</span> That Gets It Done the First Time!</h1>
       <ul class="hero__list">
