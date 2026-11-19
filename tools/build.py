@@ -289,6 +289,20 @@ FONT_JS = ("(function(l){if(!l)return;var f=function(){l.media='all'};"
            "if(l.sheet)f();else l.addEventListener('load',f)})(document.getElementById('gfonts'));")
 
 
+# Google Analytics 4. gtag.js is loaded from this hashed inline script (allowed
+# by the CSP's 'strict-dynamic') through a Trusted Types policy that only
+# accepts Google's own URL.
+GA_ID = "G-7Q5J23P749"
+GA_JS = (
+    "window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}"
+    "gtag('js',new Date());gtag('config','" + GA_ID + "');"
+    "(function(){var u='https://www.googletagmanager.com/gtag/js?id=" + GA_ID + "',s=document.createElement('script');"
+    "s.async=true;var p=window.trustedTypes&&trustedTypes.createPolicy?trustedTypes.createPolicy('gtag-loader',"
+    "{createScriptURL:function(x){if(x===u)return x;throw new Error('Blocked script URL');}}):null;"
+    "s.src=p?p.createScriptURL(u):u;document.head.appendChild(s);})();"
+)
+
+
 def _sha256(code):
     import base64
     import hashlib
@@ -302,7 +316,7 @@ def _sha256(code):
 # only keep very old browsers working. GitHub Pages can't send headers, so it
 # goes in a <meta> tag.
 CSP = "; ".join([
-    f"script-src {_sha256(FONT_JS)} {_sha256(INLINE_JS)} 'strict-dynamic' 'unsafe-inline' https:",
+    f"script-src {_sha256(GA_JS)} {_sha256(FONT_JS)} {_sha256(INLINE_JS)} 'strict-dynamic' 'unsafe-inline' https:",
     "object-src 'none'",
     "base-uri 'none'",
     "form-action 'self'",
@@ -378,6 +392,8 @@ def page(path, title, description, body, crumbs=None, extra_schema=None, page_ty
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="{CSP}">
 <meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="preconnect" href="https://www.googletagmanager.com">
+<script>{GA_JS}</script>
 <title>{e(title)}</title>
 <meta name="description" content="{e(description)}">
 <meta name="robots" content="index, follow, max-image-preview:large">

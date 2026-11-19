@@ -39,6 +39,18 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  /* Analytics events (Google Analytics 4) -------------------------------- */
+  // Phone taps are the main way customers reach ACE Roofing, so count them.
+  document.addEventListener("click", (e) => {
+    const tel = e.target.closest && e.target.closest('a[href^="tel:"]');
+    if (tel && typeof window.gtag === "function") {
+      window.gtag("event", "phone_call_click", {
+        link_text: (tel.textContent || "").trim().slice(0, 60),
+        page_path: window.location.pathname,
+      });
+    }
+  });
+
   /* Footer year ---------------------------------------------------------- */
   document.querySelectorAll("[data-year]").forEach((el) => {
     el.textContent = new Date().getFullYear();
@@ -142,6 +154,12 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!res.ok || String(json.success) !== "true") throw new Error(json.message || String(res.status));
         form.reset();
         say("Thank you for contacting us. We will get back to you as soon as possible.", true);
+        if (typeof window.gtag === "function") {
+          window.gtag("event", "generate_lead", {
+            form_name: form.querySelector("h2, h3")?.textContent.trim().slice(0, 60) || "contact",
+            page_path: window.location.pathname,
+          });
+        }
       } catch (err) {
         say(`Oops, there was an error sending your message. Please try again, or call us at ${PHONE_DISPLAY}.`, false);
       } finally {
