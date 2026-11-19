@@ -25,6 +25,7 @@ PHONE_DISPLAY = "(956) 534-2911"
 FACEBOOK = "https://www.facebook.com/aceroofingtx"
 INSTAGRAM = "https://www.instagram.com/aceroofing_tx/"
 TIKTOK = "https://www.tiktok.com/@aceroofing_tx"
+GOOGLE_REVIEW = "https://g.page/r/CesZdLbluRmFEBM/review"
 
 
 def img(name):
@@ -187,7 +188,8 @@ def badges_html():
 
 def footer(r):
     services = "".join(f'<li><a href="{r}{h}">{e(l)}</a></li>' for l, h, _ in SERVICES_MENU)
-    pages = "".join(f'<li><a href="{r}{h}">{e(l)}</a></li>' for l, h in NAV)
+    pages = "".join(f'<li><a href="{r}{h}">{e(l)}</a></li>' for l, h in NAV + FOOTER_EXTRA)
+    area_links = ", ".join(area_link(r, c) for c in AREAS)
     return f"""<footer class="site-footer">
   <div class="footer-badges">
     <div class="container badges">{badges_html()}</div>
@@ -219,7 +221,7 @@ def footer(r):
   <div class="footer-bottom">
     <div class="container">
       <span>&copy; <span data-year>2026</span> ACE Roofing. All Rights Reserved.</span>
-      <span>Roofing in {", ".join(AREAS)} &amp; surrounding DFW communities</span>
+      <span>Roofing in {area_links} &amp; surrounding DFW communities</span>
     </div>
   </div>
 </footer>
@@ -227,13 +229,29 @@ def footer(r):
 
 
 AREAS = ["Dallas", "Fort Worth", "Plano", "Frisco", "McKinney", "Allen", "Murphy", "Sachse"]
+# Cities that have their own page under service-areas/
+CITY_PAGES = {
+    "Dallas": "service-areas/dallas/",
+    "Fort Worth": "service-areas/fort-worth/",
+    "Plano": "service-areas/plano/",
+    "Frisco": "service-areas/frisco/",
+}
+FOOTER_EXTRA = [("Service Areas", "service-areas/"), ("Roofing Resources", "resources/")]
+
+
+def area_link(r, city):
+    if city in CITY_PAGES:
+        return f'<a href="{r}{CITY_PAGES[city]}">{e(city)}</a>'
+    return e(city)
+
+
 BUSINESS_ID = SITE + "/#business"
 
 BUSINESS = {
     "@type": "RoofingContractor",
     "@id": BUSINESS_ID,
     "name": "ACE Roofing",
-    "alternateName": "ACE Roofing Company",
+    "alternateName": ["ACE Roofing Company", "Ace Roofing & Construction"],
     "description": "Residential and commercial roofing contractor serving Dallas-Fort Worth, Texas: roof replacement, roof repair, roof restoration, hail and storm damage repair, and insurance claim help. Free roof inspections within 24 hours and 24/7 emergency service.",
     "url": SITE + "/",
     "logo": LOGO,
@@ -698,7 +716,8 @@ def home_body(r):
     <span class="eyebrow">Service Areas</span>
     <h2>Roofing Contractor Serving the Dallas-Fort Worth Metroplex</h2>
     <p>ACE Roofing provides roof inspections, roof replacement, roof repair, roof restoration, hail and storm damage repair and commercial roofing for homeowners and businesses throughout North Texas, including:</p>
-    <ul class="areas">{"".join(f"<li>{e(c)}, TX</li>" for c in AREAS)}</ul>
+    <ul class="areas">{"".join(f"<li>{area_link(r, c)}, TX</li>" for c in AREAS)}</ul>
+    <p><a href="{r}service-areas/">See all the areas we serve &rarr;</a></p>
     <p>Not sure if we cover your neighborhood? Call <a href="tel:{PHONE}">{PHONE_DISPLAY}</a> &mdash; if you&rsquo;re in the DFW area, we&rsquo;ll come to you with a free roof inspection within 24 hours.</p>
   </div>
 </section>
@@ -715,6 +734,7 @@ def home_body(r):
       {testimonial("I needed storm damage repair for my roof and Ace Roofing was there to help me from start to finish. Their roofers were prompt, helpful, and incredibly meticulous when it came to doing repairs and installing new shingles.", "Allen")}
       {testimonial("These guys are nothing but great. I had an issue with roof leaks so I decided to call and ask for an estimate. They did not take advantage of my situation and instead they explained to me my problem and what was the best way to fix it without going over budget.", "Sachse")}
     </div>
+    <p class="center" style="margin-top:36px">Had work done by ACE Roofing? <a class="btn" href="{GOOGLE_REVIEW}" target="_blank" rel="noopener">Leave Us A Google Review</a></p>
   </div>
 </section>
 
@@ -827,6 +847,24 @@ def services_body(r):
     </div>
   </div>
 </section>
+<section class="section">
+  <div class="container split split--top">
+    <div class="prose">
+      <span class="eyebrow">Repair Or Replace?</span>
+      <h2>Choosing The Right Fix For Your Roof</h2>
+      <p>Most roofs don&rsquo;t need to be replaced the first time something goes wrong. A few missing shingles, a cracked pipe boot or loose flashing around a chimney can usually be repaired in a single visit. A repair makes sense when the damage is limited to one area and the rest of the roof still has years of life left.</p>
+      <p>Replacement makes more sense when the shingles are near the end of their life, when damage is spread across several slopes, or when leaks keep coming back after repairs. If hail or wind caused widespread damage, your insurance policy may cover a full replacement. Roof restoration sits in between: repairs plus a protective coating that can add years to a roof that is worn but still sound.</p>
+      <p>We explain what we find on every inspection, with photos, so you can see the problem for yourself before you decide.</p>
+    </div>
+    <div class="prose">
+      <span class="eyebrow">Storms &amp; Insurance</span>
+      <h2>Help After Hail And Wind Damage</h2>
+      <p>North Texas sees hail and high winds every year, mostly in spring. After a storm, we inspect your roof, gutters, vents and siding, photograph every sign of damage and give you a written report you can send to your insurance company. When the adjuster comes out, we can be there to point out what we found on the roof.</p>
+      <p>Your insurance company decides what the claim covers, and Texas law requires you to pay your deductible. Be wary of any contractor who offers to waive it. Read <a href="{r}resources/roof-insurance-claim-texas/">how a roof insurance claim works in Texas</a> for the full process.</p>
+      <p>Not sure where to start? <a href="{r}contact/">Request a free roof inspection</a> and we&rsquo;ll be out within 24 hours.</p>
+    </div>
+  </div>
+</section>
 {cta_band(r)}"""
 
 
@@ -854,6 +892,20 @@ def residential_body(r):
     <p>Dallas-Fort Worth roofs take a beating: spring hail storms, high winds and long stretches of extreme summer heat all shorten the life of shingles, flashing and underlayment. ACE Roofing&rsquo;s residential team inspects, repairs, restores and replaces roofs on homes throughout the metroplex, so small problems get fixed before they turn into leaks, water damage or structural issues.</p>
     <p>Every project starts with a free roof inspection within 24 hours. If your roof was damaged in a storm, we photograph and document everything you need to support your insurance claim. And if you have an emergency, we&rsquo;re available 24/7.</p>
     <a class="btn" href="{r}contact/">Schedule A Free Inspection</a>
+  </div>
+</section>
+<section class="section">
+  <div class="container">
+    <div class="section-title center">
+      <h2>Signs Your Home&rsquo;s Roof Needs Attention</h2>
+    </div>
+    <div class="benefits">
+      <div class="benefit"><h3>Granules In The Gutters</h3><p>Asphalt shingles shed their protective granules as they age or after hail. Piles of gritty granules at the downspouts mean the shingles are wearing thin.</p></div>
+      <div class="benefit"><h3>Water Stains On Ceilings</h3><p>Brown rings on a ceiling or in the attic usually point to a leak at flashing, a vent or a damaged section of shingles. Small leaks get worse fast in heavy rain.</p></div>
+      <div class="benefit"><h3>Missing Or Lifted Shingles</h3><p>Strong winds can break the seal on shingles and lift or tear them off, leaving the underlayment exposed to sun and rain.</p></div>
+      <div class="benefit"><h3>Dents After A Hail Storm</h3><p>Dents on gutters, vents, a mailbox or your car are a good sign the roof was hit too. Hail damage on shingles is often hard to see from the ground.</p></div>
+    </div>
+    <p class="center" style="margin-top:30px">Spotted one of these? Read our guide to <a href="{r}resources/how-to-tell-if-roof-has-hail-damage/">checking your roof for hail damage</a>, or call <a href="tel:{PHONE}">{PHONE_DISPLAY}</a> for a free inspection.</p>
   </div>
 </section>
 {cta_band(r)}"""
@@ -1121,6 +1173,14 @@ def gallery_body(r):
     {gallery_html(GALLERY, "gallery gallery--3")}
   </div>
 </section>
+<section class="section section--light">
+  <div class="container narrow prose center">
+    <h2>Roofing Work Across Dallas-Fort Worth</h2>
+    <p>These photos come from homes and businesses ACE Roofing has worked on around the metroplex, including full roof replacements, storm damage repairs and roof restorations. Every project starts the same way: a free inspection, a clear explanation of what we found, and a written estimate before any work begins.</p>
+    <p>On a replacement we remove the old roof down to the deck, replace any soft or rotten decking, and install new underlayment, flashing, ventilation and shingles. When the work is done, we clean up the job site and do a final walk-through with you.</p>
+    <p>Want to see work near you? We serve <a href="{r}service-areas/">Dallas, Fort Worth, Plano, Frisco and surrounding cities</a>. <a href="{r}contact/">Contact us</a> to schedule a free roof inspection.</p>
+  </div>
+</section>
 {cta_band(r)}"""
 
 
@@ -1152,7 +1212,8 @@ def contact_body(r):
         <li>{ICON_CLOCK}<div><small>Hours</small>24/7 Emergency Services</div></li>
       </ul>
       <a class="btn btn--block" href="tel:{PHONE}" style="margin-top:10px">Click To Call</a>
-      <div class="social" style="margin-top:24px">{social_links()}</div>
+      <p style="margin-top:24px">Happy with your roof? <a href="{GOOGLE_REVIEW}" target="_blank" rel="noopener" style="color:var(--gold)">Leave us a Google review</a>.</p>
+      <div class="social" style="margin-top:16px">{social_links()}</div>
     </aside>
     <form class="form-card" data-contact-form novalidate>
       <h2>Let&rsquo;s Discuss Your Roofing Project With Us!</h2>
@@ -1169,6 +1230,26 @@ def contact_body(r):
       <div class="form-status" role="status" aria-live="polite"></div>
     </form>
   </div>
+</section>
+<section class="section section--light">
+  <div class="container split split--top">
+    <div class="prose">
+      <h2>What Happens After You Reach Out</h2>
+      <ol>
+        <li><strong>We call you back.</strong> A member of our team contacts you to ask about your roof and set a time that works for you.</li>
+        <li><strong>Free roof inspection within 24 hours.</strong> We check the shingles, flashing, vents, gutters and attic where we can, and photograph anything we find.</li>
+        <li><strong>A clear, written estimate.</strong> We walk you through the photos and explain whether a repair, restoration or replacement makes the most sense.</li>
+        <li><strong>Insurance documentation if you need it.</strong> For storm damage, we give you a report you can send to your insurance company.</li>
+      </ol>
+      <p>For a leak or storm damage that can&rsquo;t wait, call <a href="tel:{PHONE}">{PHONE_DISPLAY}</a>. Emergency service is available 24/7.</p>
+    </div>
+    <div class="prose" id="service-areas">
+      <h2>Areas We Serve</h2>
+      <p>ACE Roofing works on homes and businesses throughout the Dallas-Fort Worth metroplex, including:</p>
+      <ul class="areas" style="justify-content:flex-start">{"".join(f"<li>{area_link(r, c)}, TX</li>" for c in AREAS)}</ul>
+      <p>If your city isn&rsquo;t listed, call us anyway. If you&rsquo;re in the DFW area, we&rsquo;ll most likely come to you. <a href="{r}service-areas/">See all service areas &rarr;</a></p>
+    </div>
+  </div>
 </section>"""
 
 
@@ -1180,6 +1261,379 @@ page(
     crumbs=[("Contact Us", "contact/")],
     page_type="ContactPage",
 )
+
+
+# --------------------------------------------------------------------------
+# SERVICE AREAS (city pages)
+# --------------------------------------------------------------------------
+CITY = {
+    "Dallas": {
+        "title": "Roofing Contractor in Dallas, TX | ACE Roofing",
+        "meta": "Roof repair, roof replacement and hail damage repair in Dallas, TX. Free roof inspection within 24 hours, insurance claim documentation, 24/7 emergency service.",
+        "hero": img("Screenshot+2023-10-25+9.18.25+AM-1920w.png"),
+        "intro": "ACE Roofing repairs and replaces roofs for homeowners and businesses across Dallas, from older homes near the lakes to newer builds in Far North Dallas. Free inspections within 24 hours.",
+        "local_h": "Roofing For Dallas Homes Of Every Age",
+        "local": [
+            "Dallas has some of the most varied housing in North Texas. Older neighborhoods such as Lakewood, Oak Cliff and the M Streets have homes that are decades old, often with steep roof lines, older decking and several layers of past repairs. Newer areas in Far North Dallas and Lake Highlands are more likely to have builder-grade shingles that are reaching the end of their life. We look at both the roof covering and what is underneath it, so you get an honest picture of whether a repair will hold or a replacement is the better spend.",
+            "Like the rest of the metroplex, Dallas gets most of its hail between March and June, and strong straight-line winds can hit any time a line of storms comes through. After a storm, many homeowners don&rsquo;t know they have damage until a leak shows up months later. A free inspection after any hail storm is the easiest way to find damage while it is still covered by your insurance policy.",
+            "Long Texas summers matter too. Heat and sun dry out shingles and sealants, and an attic that doesn&rsquo;t vent well can make a roof age faster. When we replace a roof in Dallas, we check intake and exhaust ventilation so the new roof lasts as long as it should.",
+        ],
+        "faq": [
+            ("How fast can you inspect my roof in Dallas?", "We offer a free roof inspection within 24 hours anywhere in Dallas. For active leaks or storm damage, call us any time. Emergency service is available 24/7."),
+            ("Do I need a permit to replace my roof in Dallas?", "A full roof replacement usually needs a city permit. We take care of the permit when one is required, so you don&rsquo;t have to deal with the city yourself."),
+            ("Will my insurance pay for a new roof after hail?", "It depends on your policy and on what the adjuster finds. We document all of the damage with photos and a written report you can send to your insurance company, and we can meet the adjuster at your home."),
+        ],
+        "nearby": ["Plano", "Frisco", "Fort Worth"],
+    },
+    "Fort Worth": {
+        "title": "Roofing Contractor in Fort Worth, TX | ACE Roofing",
+        "meta": "Fort Worth roof repair, roof replacement and storm damage repair. Free roof inspection within 24 hours, documented reports for insurance, 24/7 emergency service.",
+        "hero": img("Screenshot+2023-10-25+9.21.41+AM-1920w.png"),
+        "intro": "ACE Roofing provides roof inspections, repairs and full replacements for homes and businesses throughout Fort Worth and Tarrant County, with a free inspection within 24 hours.",
+        "local_h": "Roofing Built For Fort Worth Weather",
+        "local": [
+            "Fort Worth sits on the western side of the metroplex, and storms that build out west often hit here first. Spring brings hail and high winds, and summer brings long stretches of triple-digit heat. Both are hard on asphalt shingles. We see a lot of roofs in Fort Worth with lifted or creased shingles from wind, bruised shingles from hail, and flashing that has pulled away around chimneys and walls.",
+            "Fort Worth&rsquo;s neighborhoods range from historic homes near the Cultural District and Fairmount to fast-growing subdivisions in the north near Alliance and in the south and west. Older homes may need decking repairs and careful flashing work. Some historic districts also have rules about how a home&rsquo;s exterior can change, so check with the city before choosing a different roofing material. Newer homes often need their first full replacement after a major hail storm. We handle both, and we tell you plainly which one your roof needs.",
+            "If you manage a commercial property in Fort Worth, we also repair, restore and replace commercial roofs and schedule the work around your business hours.",
+        ],
+        "faq": [
+            ("Do you serve all of Fort Worth?", "Yes. We work throughout Fort Worth and nearby Tarrant County communities. Call us if you&rsquo;re not sure whether we cover your area."),
+            ("How do I know if hail damaged my roof?", "Hail damage is often hard to see from the ground. Look for dents on gutters, vents and outdoor equipment, and for shingle granules collecting at your downspouts. Then schedule a free inspection so we can check the roof up close."),
+            ("Can you help with my insurance claim?", "We photograph and document all of the damage and give you a written report to send to your insurance company. We can also meet your adjuster at the property to show them what we found."),
+        ],
+        "nearby": ["Dallas", "Frisco", "Plano"],
+    },
+    "Plano": {
+        "title": "Roofing Contractor in Plano, TX | ACE Roofing",
+        "meta": "Plano roof replacement, roof repair and hail damage repair. Free roof inspection within 24 hours, HOA-friendly material choices, insurance documentation, 24/7 service.",
+        "hero": img("Screenshot+2023-10-25+9.22.04+AM-1920w.png"),
+        "intro": "ACE Roofing helps Plano homeowners and businesses repair, restore and replace their roofs, starting with a free inspection within 24 hours.",
+        "local_h": "Roofing For Plano Homes And Neighborhoods",
+        "local": [
+            "Much of Plano was built in the 1970s, 80s and 90s. Many of those homes are now on their second or third roof, and a lot of them have been through more than one major hail storm. When we inspect a Plano roof, we look at the shingles and also at the decking, flashing and attic ventilation, which often date back to the original build.",
+            "Many Plano neighborhoods have a homeowners association with rules about shingle style and color. Before a replacement, we help you choose a product that meets your HOA&rsquo;s guidelines and give you the product details you need to submit for approval.",
+            "Plano gets the same spring hail and summer heat as the rest of North Texas. If a storm has moved through your area, a free inspection is the fastest way to know whether you have damage worth reporting to your insurance company.",
+        ],
+        "faq": [
+            ("Can you help with my HOA approval?", "Yes. We can give you the shingle manufacturer, style and color details your HOA asks for, and help you choose a product that fits their rules."),
+            ("How long does a roof replacement take in Plano?", "Most single-family homes are finished in one to two days once materials arrive, depending on the size of the roof, the weather and how much decking needs to be replaced."),
+            ("Do you offer emergency roof repair in Plano?", "Yes. If you have an active leak or storm damage, call us any time. Emergency service is available 24/7, and we can tarp a damaged roof to prevent more water damage."),
+        ],
+        "nearby": ["Frisco", "Dallas", "Fort Worth"],
+    },
+    "Frisco": {
+        "title": "Roofing Contractor in Frisco, TX | ACE Roofing",
+        "meta": "Frisco roof repair, roof replacement and hail damage repair. Free roof inspection within 24 hours, HOA-friendly shingles, insurance claim documentation, 24/7 service.",
+        "hero": img("Screenshot+2026-11-17+at+4.52.27-PM-1920w.png"),
+        "intro": "ACE Roofing inspects, repairs and replaces roofs across Frisco, with a free inspection within 24 hours and 24/7 emergency service.",
+        "local_h": "Roofing For Frisco&rsquo;s Newer Homes",
+        "local": [
+            "Frisco has grown fast over the last two decades, so most of its homes are relatively new. That doesn&rsquo;t mean their roofs are trouble-free. Builder-grade shingles on many newer homes aren&rsquo;t made to stand up to repeated North Texas hail, and after a big storm, whole neighborhoods can need repairs or replacements at once.",
+            "Most Frisco subdivisions have an HOA with rules about roofing materials and colors. We help you pick shingles that meet your HOA&rsquo;s requirements, including impact-resistant options that hold up better to hail, and we give you the product details for your approval request.",
+            "Newer homes also tend to have complex roof lines with many valleys, hips and transitions. Those areas need careful flashing work, so we pay close attention to them on every repair and replacement.",
+        ],
+        "faq": [
+            ("Are impact-resistant shingles worth it in Frisco?", "For many Frisco homeowners, yes. Impact-resistant shingles are designed to better withstand hail, and some insurance companies offer a discount for them. Ask your insurance agent what discount, if any, applies to your policy."),
+            ("My home is only a few years old. Can it still have hail damage?", "Yes. Hail can bruise or crack shingles on a roof of any age. If there has been a hail storm in your area, a free inspection will tell you whether your roof was damaged."),
+            ("Do you work with HOAs in Frisco?", "Yes. We help you choose materials that meet your HOA&rsquo;s guidelines and give you the product information you need to submit for approval."),
+        ],
+        "nearby": ["Plano", "Dallas", "Fort Worth"],
+    },
+}
+
+STEPS = [
+    ("Free Inspection", "We inspect your roof within 24 hours, at no cost, and photograph everything we find."),
+    ("Clear Recommendation", "We explain whether a repair, restoration or replacement makes the most sense, with a written estimate."),
+    ("Insurance Documentation", "For storm damage, you get a written report and photos to send to your insurance company."),
+    ("Quality Work &amp; Clean-Up", "Our crew completes the work, cleans up the job site and walks the finished roof with you."),
+]
+
+
+def city_page(city):
+    c = CITY[city]
+    path = CITY_PAGES[city]
+
+    def body(r):
+        steps = "".join(f'<div class="benefit"><h3>{i + 1}. {t}</h3><p>{d}</p></div>' for i, (t, d) in enumerate(STEPS))
+        faq = "".join(
+            f'<details{" open" if i == 0 else ""}><summary>{q}</summary><div class="faq__body"><p>{a}</p></div></details>'
+            for i, (q, a) in enumerate(c["faq"])
+        )
+        local = "".join(f"<p>{p}</p>" for p in c["local"])
+        nearby = " &middot; ".join(f'<a href="{r}{CITY_PAGES[n]}">Roofing in {e(n)}</a>' for n in c["nearby"])
+        return f"""{page_hero(r, f"Roofing Contractor in {city}, TX", c["intro"], c["hero"], alt=f"Home roof in {city}, Texas")}
+<section class="section">
+  <div class="container split split--top">
+    <div class="prose">
+      <span class="eyebrow">{e(city)}, Texas</span>
+      <h2>{c["local_h"]}</h2>
+      {local}
+      <p><a class="btn" href="tel:{PHONE}">Call {PHONE_DISPLAY}</a></p>
+    </div>
+    <div>{inspection_form("h3")}</div>
+  </div>
+</section>
+<section class="section section--light">
+  <div class="container">
+    <div class="section-title center">
+      <img class="spade-divider" src="{SPADE_GOLD}" alt="" width="70" height="72">
+      <h2>Roofing Services in {e(city)}</h2>
+    </div>
+    {cards(r, ["replace", "repair", "storm", "restore", "insurance", "commercial"])}
+  </div>
+</section>
+<section class="section">
+  <div class="container">
+    <div class="section-title center">
+      <h2>How It Works</h2>
+    </div>
+    <div class="benefits">{steps}</div>
+  </div>
+</section>
+<section class="section section--light">
+  <div class="container">
+    <div class="section-title center">
+      <h2>{e(city)} Roofing Questions</h2>
+    </div>
+    <div class="faq">{faq}</div>
+    <p class="center" style="margin-top:30px">Also serving nearby: {nearby} &middot; <a href="{r}service-areas/">All service areas</a></p>
+  </div>
+</section>
+{cta_band(r, f"Schedule A Free Roof Inspection in {e(city)}")}"""
+
+    page(
+        path, c["title"], c["meta"], body,
+        crumbs=[("Service Areas", "service-areas/"), (city, path)],
+        extra_schema=[
+            {
+                "@type": "Service",
+                "name": f"Roofing in {city}, TX",
+                "serviceType": "Roofing contractor",
+                "description": c["meta"],
+                "provider": {"@id": BUSINESS_ID},
+                "areaServed": {"@type": "City", "name": f"{city}, TX"},
+                "url": canonical_for(path),
+            },
+            {
+                "@type": "FAQPage",
+                "mainEntity": [
+                    {"@type": "Question", "name": html.unescape(q), "acceptedAnswer": {"@type": "Answer", "text": html.unescape(a)}}
+                    for q, a in c["faq"]
+                ],
+            },
+        ],
+    )
+
+
+def areas_body(r):
+    city_cards = "".join(
+        f'<div class="benefit"><h3><a href="{r}{CITY_PAGES[c]}">{e(c)}, TX</a></h3><p>{CITY[c]["intro"]}</p></div>'
+        for c in CITY_PAGES
+    )
+    others = [c for c in AREAS if c not in CITY_PAGES]
+    return f"""{page_hero(r, "Roofing Service Areas in Dallas-Fort Worth", "ACE Roofing serves homeowners and businesses across the Dallas-Fort Worth metroplex with free roof inspections within 24 hours and 24/7 emergency service.", img("Screenshot+2023-10-25+9.18.25+AM-1920w.png"), alt="Aerial view of a Dallas-Fort Worth neighborhood")}
+<section class="section">
+  <div class="container">
+    <div class="benefits">{city_cards}</div>
+  </div>
+</section>
+<section class="section section--light" id="service-areas">
+  <div class="container narrow center">
+    <h2>More Communities We Serve</h2>
+    <p>We also repair and replace roofs in {", ".join(e(c) for c in others)} and the surrounding North Texas communities.</p>
+    <ul class="areas">{"".join(f"<li>{area_link(r, c)}, TX</li>" for c in AREAS)}</ul>
+    <p>Not sure if we cover your neighborhood? Call <a href="tel:{PHONE}">{PHONE_DISPLAY}</a>.</p>
+  </div>
+</section>
+{cta_band(r)}"""
+
+
+page(
+    "service-areas/",
+    "Roofing Service Areas in Dallas-Fort Worth | ACE Roofing",
+    "ACE Roofing serves Dallas, Fort Worth, Plano, Frisco, McKinney, Allen, Murphy, Sachse and nearby DFW cities. Free roof inspection within 24 hours.",
+    areas_body,
+    crumbs=[("Service Areas", "service-areas/")],
+    page_type="CollectionPage",
+)
+for _city in CITY_PAGES:
+    city_page(_city)
+
+
+# --------------------------------------------------------------------------
+# RESOURCES (articles)
+# --------------------------------------------------------------------------
+ARTICLES = [
+    {
+        "path": "resources/how-to-tell-if-roof-has-hail-damage/",
+        "title": "How to Tell If Your Roof Has Hail Damage | ACE Roofing",
+        "meta": "The signs of hail damage on a North Texas roof, what you can safely check from the ground, and when to call for a free roof inspection.",
+        "h1": "How to Tell If Your Roof Has Hail Damage",
+        "summary": "The signs of hail damage you can check from the ground, what a roofer looks for up close, and why timing matters for your insurance claim.",
+        "date": "2026-11-18",
+        "hero": IMG_STORM,
+        "sections": [
+            ("", [
+                "Hail is the most common cause of roof damage in Dallas-Fort Worth, and most of it happens between March and June. The tricky part is that hail damage often can&rsquo;t be seen from the ground, and a damaged roof may not leak until months later. By then the storm can be hard to connect to the damage. Here is how to tell whether your roof may have been hit, and what to do next.",
+            ]),
+            ("Start with what you can see from the ground", [
+                "You don&rsquo;t need to climb on your roof to find clues. In fact, you shouldn&rsquo;t: wet or damaged shingles are slippery, and a fall is far more costly than an inspection. Walk around your home and look for:",
+                "<ul><li><strong>Dents in gutters, downspouts and metal vents.</strong> If soft metal is dented, the shingles took the same hits.</li><li><strong>Granules at the downspouts.</strong> Shingles are coated with small granules that protect them from the sun. Hail knocks them loose, and they wash out of the downspouts in small piles.</li><li><strong>Damage to outdoor items.</strong> Dents on your car, mailbox, grill, fence or the fins of your AC unit are a sign of hail big enough to hurt a roof.</li><li><strong>Torn window screens or chipped paint and siding</strong> on the side of the house that faced the storm.</li><li><strong>Shingle pieces in the yard</strong> after a storm with high winds.</li></ul>",
+            ]),
+            ("What hail damage looks like on shingles", [
+                "On asphalt shingles, hail usually leaves round or irregular spots where the granules have been knocked off, exposing the dark mat underneath. These spots can feel soft, like a bruise on an apple, because the impact has cracked the mat. Larger hail can crack or split shingles outright and break the seal that holds them down, so they lift in the next strong wind.",
+                "The damage isn&rsquo;t always obvious. A roof can look fine from the street and still have dozens of hits per slope. Shingles that have lost granules break down faster in the Texas sun, and cracked mats let water reach the underlayment. That is why hail damage often shows up as a leak a season or two later.",
+            ]),
+            ("Check inside, too", [
+                "Look at your ceilings, especially in upstairs rooms and closets, for water stains or peeling paint. If you can safely get into your attic, look for damp insulation, water stains on the decking or daylight coming through. Any of these signs means it is time for a professional inspection.",
+            ]),
+            ("Why timing matters", [
+                "Most homeowners insurance policies set a time limit for reporting storm damage, so check your policy. Reporting damage soon after the storm also makes it easier to show which storm caused it. If you wait until a leak appears, you may also be dealing with water damage inside your home that could have been prevented.",
+                "After any storm with hail, a free inspection is the simplest way to find out where you stand. If there is damage, you will have photos and a written report before you call your insurance company. If there isn&rsquo;t, you have peace of mind.",
+            ]),
+            ("What happens during an ACE Roofing hail inspection", [
+                "We inspect each slope of the roof, plus the ridge, vents, flashing, gutters and any skylights. We mark and photograph hail hits and other damage, check the attic where we can, and look at the siding, windows and fences for supporting evidence. You get a written report with photos that you can send to your insurance company, and we explain whether you need a repair, a full replacement or nothing at all.",
+                "If you think your roof was hit by hail, <a href=\"../../contact/\">request a free roof inspection</a> or call <a href=\"tel:" + PHONE + "\">" + PHONE_DISPLAY + "</a>. We serve homeowners across Dallas-Fort Worth and can usually be there within 24 hours. You can also read <a href=\"../roof-insurance-claim-texas/\">how a roof insurance claim works in Texas</a>.",
+            ]),
+        ],
+    },
+    {
+        "path": "resources/roof-insurance-claim-texas/",
+        "title": "How a Roof Insurance Claim Works in Texas | ACE Roofing",
+        "meta": "A step-by-step guide to filing a roof insurance claim in Texas after hail or wind damage: deadlines, the adjuster visit, your deductible and how to avoid scams.",
+        "h1": "How a Roof Insurance Claim Works in Texas",
+        "summary": "A step-by-step guide to filing a roof claim after hail or wind damage in Texas, including insurer deadlines, the adjuster visit and your deductible.",
+        "date": "2026-11-18",
+        "hero": IMG_INSURANCE,
+        "sections": [
+            ("", [
+                "If hail or wind has damaged your roof, your homeowners insurance policy may pay for repairs or a full replacement. The process can feel confusing the first time. Here is how a roof claim usually works in Texas, step by step, along with the rules that protect you. This is general information, not legal advice. Your own policy and your insurance company have the final say on what is covered.",
+            ]),
+            ("1. Get your roof inspected", [
+                "Before you call your insurance company, it helps to know whether you actually have damage. A roofing contractor can inspect the roof and document what they find with photos. That way you aren&rsquo;t opening a claim for a roof that turns out to be fine, and if there is damage, you have evidence ready. ACE Roofing provides <a href=\"../../contact/\">free roof inspections</a> and a written report you can share with your insurer.",
+            ]),
+            ("2. Report the claim to your insurance company", [
+                "Call your insurance company or use its app or website to report the damage. Note the date of the storm, and keep a record of your claim number and everyone you speak to. Check your policy for the time limit on reporting storm damage, and don&rsquo;t wait until the last minute.",
+                "Texas law sets deadlines for insurers once you file. Under the Prompt Payment of Claims Act (Texas Insurance Code Chapter 542), your insurance company generally has 15 days to acknowledge your claim and start its investigation. It then has 15 business days after receiving everything it asked for to accept or reject the claim, and once it accepts, it generally must pay within 5 business days. These deadlines can be extended in some cases, such as after a declared weather disaster.",
+            ]),
+            ("3. Protect your home from further damage", [
+                "Most policies expect you to take reasonable steps to prevent more damage, like tarping an active leak. Keep receipts for any emergency repairs. If your roof is leaking, call us any time. We offer 24/7 emergency service.",
+            ]),
+            ("4. Meet the adjuster", [
+                "Your insurance company will send an adjuster to inspect the damage. It is a good idea to have your roofer there too, so they can show the adjuster the damage they documented. The adjuster then writes up an estimate of what the policy covers.",
+                "In Texas, a roofing contractor who is doing the work on your home can&rsquo;t act as your public adjuster or negotiate the claim for you. A good roofer can document the damage, meet the adjuster on the roof and answer questions about repair methods, but the claim itself is between you and your insurer. If you need someone to represent you, Texas licenses public adjusters for that.",
+            ]),
+            ("5. Review the estimate and pay your deductible", [
+                "Once you have the insurer&rsquo;s estimate, your roofer can review it with you and explain any items that may be missing. If you disagree with the estimate, contact your insurance company and ask how to request a review.",
+                "Texas law requires you to pay your deductible, and it is illegal for a contractor to offer to waive, rebate or absorb it. A roofer who offers to cover your deductible is breaking the law, and that offer is a red flag for other shortcuts. You can read more on the <a href=\"https://www.tdi.texas.gov/Consumer/storms/roofing-and-insurance-know-the-law.html\" rel=\"noopener\" target=\"_blank\">Texas Department of Insurance website</a>.",
+            ]),
+            ("6. Schedule the work and close out the claim", [
+                "Many policies pay in two parts: an amount up front, and the rest (often called recoverable depreciation) after the work is complete and you send the final invoice. Your roofer should give you a final invoice and any photos your insurer asks for.",
+            ]),
+            ("How to avoid storm-chaser scams", [
+                "After big hail storms, out-of-town crews often go door to door. Before you sign anything, get a written estimate on company letterhead with a local phone number, check online reviews, never pay the full amount up front, and be wary of anyone who pressures you to sign right away or offers to cover your deductible.",
+                "If you have storm damage in Dallas-Fort Worth, <a href=\"../../contact/\">schedule a free roof inspection</a> with ACE Roofing or call <a href=\"tel:" + PHONE + "\">" + PHONE_DISPLAY + "</a>. Not sure whether you have damage? Read <a href=\"../how-to-tell-if-roof-has-hail-damage/\">how to tell if your roof has hail damage</a>.",
+            ]),
+        ],
+    },
+]
+
+
+def article_page(a):
+    def body(r):
+        parts = []
+        for h, ps in a["sections"]:
+            if h:
+                parts.append(f"<h2>{e(h)}</h2>")
+            for p in ps:
+                parts.append(p if p.startswith("<ul") else f"<p>{p}</p>")
+        others = "".join(
+            f'<li><a href="{r}{o["path"]}">{e(o["h1"])}</a></li>' for o in ARTICLES if o is not a
+        )
+        return f"""{page_hero(r, a["h1"], a["summary"], a["hero"], button=False, alt="")}
+<section class="section">
+  <div class="container narrow prose article">
+    <p class="post-meta">By ACE Roofing &middot; Updated {a["date"]}</p>
+    {"".join(parts)}
+    <h2>More Roofing Resources</h2>
+    <ul>{others}<li><a href="{r}resources/">All roofing resources</a></li></ul>
+  </div>
+</section>
+{cta_band(r)}"""
+
+    page(
+        a["path"], a["title"], a["meta"], body,
+        crumbs=[("Resources", "resources/"), (a["h1"], a["path"])],
+        extra_schema=[{
+            "@type": "Article",
+            "headline": a["h1"],
+            "description": a["meta"],
+            "datePublished": a["date"],
+            "dateModified": a["date"],
+            "image": a["hero"],
+            "author": {"@id": BUSINESS_ID},
+            "publisher": {"@id": BUSINESS_ID},
+            "mainEntityOfPage": canonical_for(a["path"]),
+        }],
+    )
+
+
+def resources_body(r):
+    items = "".join(
+        f'<div class="benefit"><h3><a href="{r}{a["path"]}">{e(a["h1"])}</a></h3><p>{e(a["summary"])}</p></div>'
+        for a in ARTICLES
+    )
+    return f"""{page_hero(r, "Roofing Resources", "Practical guides for Dallas-Fort Worth homeowners on hail damage, insurance claims and taking care of your roof.", IMG_REPAIR, button=False, alt="")}
+<section class="section">
+  <div class="container">
+    <div class="benefits">{items}</div>
+  </div>
+</section>
+{cta_band(r)}"""
+
+
+page(
+    "resources/",
+    "Roofing Resources for DFW Homeowners | ACE Roofing",
+    "Guides for Dallas-Fort Worth homeowners: how to spot hail damage, how roof insurance claims work in Texas, and how to take care of your roof.",
+    resources_body,
+    crumbs=[("Resources", "resources/")],
+    page_type="CollectionPage",
+)
+for _a in ARTICLES:
+    article_page(_a)
+
+
+# --------------------------------------------------------------------------
+# REDIRECTS from old site URLs (GitHub Pages can't send 301s, so these are
+# small noindex pages with a canonical tag and an instant meta refresh).
+# --------------------------------------------------------------------------
+REDIRECTS = {
+    "services/roof-repair/": "our-services/residential-roofing/roof-repair/",
+    "services/roof-replacement/": "our-services/residential-roofing/roof-replacement/",
+    "services/storm-damage-repair/": "our-services/residential-roofing/storm-damage-repair/",
+    "services/gutter-services/": "our-services/",
+    "services/": "our-services/",
+}
+for _old, _new in REDIRECTS.items():
+    _target = canonical_for(_new)
+    _dir = os.path.join(OUT, _old)
+    os.makedirs(_dir, exist_ok=True)
+    with open(os.path.join(_dir, "index.html"), "w") as f:
+        f.write(f"""<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<meta charset="utf-8">
+<title>Moved | ACE Roofing</title>
+<meta name="robots" content="noindex">
+<link rel="canonical" href="{_target}">
+<meta http-equiv="refresh" content="0; url={_target}">
+</head>
+<body>
+<p>This page has moved to <a href="{_target}">{_target}</a>.</p>
+</body>
+</html>
+""")
 
 
 # --------------------------------------------------------------------------
