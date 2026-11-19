@@ -2,13 +2,11 @@
 
 /* --------------------------------------------------------------------------
    FORM SETUP
-   The contact forms need a form service to deliver submissions by email.
-   1. Create a free form at https://formspree.io (or a similar service).
-   2. Paste the endpoint URL it gives you below, e.g.
-      "https://formspree.io/f/abcdwxyz"
-   Until this is set, the forms show a message asking visitors to call instead.
+   Both forms (free inspection + contact page) are emailed through
+   FormSubmit (https://formsubmit.co) to the address below. To change where
+   requests go, change the email address at the end of this URL.
    -------------------------------------------------------------------------- */
-const FORM_ENDPOINT = "";
+const FORM_ENDPOINT = "https://formsubmit.co/ajax/nperez@aceroofingtx.com";
 
 const PHONE_DISPLAY = "(956) 534-2911";
 
@@ -113,12 +111,25 @@ document.addEventListener("DOMContentLoaded", () => {
       const original = submit.textContent;
       submit.textContent = "Sending…";
       try {
+        // Collect fields; checkboxes with the same name are joined with commas.
+        const data = {};
+        new FormData(form).forEach((value, key) => {
+          data[key] = data[key] ? `${data[key]}, ${value}` : value;
+        });
+        if (data._honey) return; // spam bot filled the hidden field
+        delete data._honey;
+        if (data.email) data._replyto = data.email;
+        data._template = "table";
+        data._captcha = "false";
+        data["Page"] = window.location.href;
+
         const res = await fetch(FORM_ENDPOINT, {
           method: "POST",
-          body: new FormData(form),
-          headers: { Accept: "application/json" },
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+          body: JSON.stringify(data),
         });
-        if (!res.ok) throw new Error(String(res.status));
+        const json = await res.json().catch(() => ({}));
+        if (!res.ok || String(json.success) !== "true") throw new Error(json.message || String(res.status));
         form.reset();
         say("Thank you for contacting us. We will get back to you as soon as possible.", true);
       } catch (err) {
