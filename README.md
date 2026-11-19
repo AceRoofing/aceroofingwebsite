@@ -29,7 +29,7 @@ Shared files:
 
 ## Before going live
 
-1. **Forms.** Both forms email nperez@aceroofingtx.com through [FormSubmit](https://formsubmit.co). The address is set in `FORM_ENDPOINT` at the top of `assets/js/main.js`. The first submission sends a one-time confirmation email to that inbox; click the link in it to turn the forms on.
+1. **Forms.** Both forms are sent through [Web3Forms](https://web3forms.com) (account aceco@aceroofingtx.com), which emails each request and logs it in the Web3Forms dashboard. The access key is `FORM_ACCESS_KEY` at the top of `assets/js/main.js`; recipients are changed in the Web3Forms dashboard.
 2. **Images.** Images are still loaded from the current website host (`irp.cdn-website.com`). They will disappear if that account is cancelled. Run `scripts/localize-images.sh` from the repo root to download them into `assets/images/` and update every page to use the local copies.
 3. **Hosting / domain.** For GitHub Pages: go to Settings → Pages, deploy from `main`, root folder, then set the custom domain to `www.aceroofingtx.com`.
 
