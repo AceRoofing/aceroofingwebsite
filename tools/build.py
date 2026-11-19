@@ -251,7 +251,7 @@ BUSINESS = {
     "@type": "RoofingContractor",
     "@id": BUSINESS_ID,
     "name": "ACE Roofing",
-    "alternateName": ["ACE Roofing Company", "Ace Roofing & Construction", "Ace Roofing & Construction LLC"],
+    "alternateName": ["ACE Roofing Company", "Ace Roofing & Construction"],
     "description": "Residential and commercial roofing contractor serving Dallas-Fort Worth, Texas: roof replacement, roof repair, roof restoration, hail and storm damage repair, and insurance claim help. Free roof inspections within 24 hours and 24/7 emergency service.",
     "url": SITE + "/",
     "logo": LOGO,
