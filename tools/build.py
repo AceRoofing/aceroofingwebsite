@@ -25,6 +25,7 @@ PHONE_DISPLAY = "(956) 534-2911"
 FACEBOOK = "https://www.facebook.com/aceroofingtx"
 INSTAGRAM = "https://www.instagram.com/aceroofing_tx/"
 TIKTOK = "https://www.tiktok.com/@aceroofing_tx"
+GOOGLE_REVIEW = "https://g.page/r/CesZdLbluRmFEBM/review"
 
 
 def img(name):
@@ -733,6 +734,7 @@ def home_body(r):
       {testimonial("I needed storm damage repair for my roof and Ace Roofing was there to help me from start to finish. Their roofers were prompt, helpful, and incredibly meticulous when it came to doing repairs and installing new shingles.", "Allen")}
       {testimonial("These guys are nothing but great. I had an issue with roof leaks so I decided to call and ask for an estimate. They did not take advantage of my situation and instead they explained to me my problem and what was the best way to fix it without going over budget.", "Sachse")}
     </div>
+    <p class="center" style="margin-top:36px">Had work done by ACE Roofing? <a class="btn" href="{GOOGLE_REVIEW}" target="_blank" rel="noopener">Leave Us A Google Review</a></p>
   </div>
 </section>
 
@@ -1210,7 +1212,8 @@ def contact_body(r):
         <li>{ICON_CLOCK}<div><small>Hours</small>24/7 Emergency Services</div></li>
       </ul>
       <a class="btn btn--block" href="tel:{PHONE}" style="margin-top:10px">Click To Call</a>
-      <div class="social" style="margin-top:24px">{social_links()}</div>
+      <p style="margin-top:24px">Happy with your roof? <a href="{GOOGLE_REVIEW}" target="_blank" rel="noopener" style="color:var(--gold)">Leave us a Google review</a>.</p>
+      <div class="social" style="margin-top:16px">{social_links()}</div>
     </aside>
     <form class="form-card" data-contact-form novalidate>
       <h2>Let&rsquo;s Discuss Your Roofing Project With Us!</h2>
